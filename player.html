@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player Panel - Solo Leveling</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-main: #191919;
+            --panel-bg: #222226;
+            --neon-purple: #9d4edd;
+            --text-main: #f8f9fa;
+            --text-muted: #8b8b93;
+            --c-cyan: #38bdf8;
+            --c-red: #ef4444;
+            --c-gold: #fbbf24;
+        }
+
+        body {
+            background-color: transparent; /* Transparente para Notion */
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .title-header {
+            color: var(--neon-purple);
+            font-size: 2rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 15px rgba(157, 78, 221, 0.6);
+        }
+
+        .player-card {
+            background-color: var(--panel-bg);
+            border-radius: 10px;
+            padding: 20px;
+            width: 100%;
+            max-width: 340px;
+            position: relative;
+            /* El efecto de borde brillante superior e izquierdo */
+            border-top: 2px solid #b366ff;
+            border-left: 2px solid #b366ff;
+            box-shadow: -5px -5px 20px rgba(157, 78, 221, 0.25), 
+                        5px 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .user-tag {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .avatar-img {
+            width: 100%;
+            height: 230px; /* Aumentamos la altura */
+            object-fit: cover;
+            object-position: top; /* Enfoca la cabeza del avatar */
+            border-radius: 8px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .icon-stats {
+            color: #60a5fa;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .level-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .rank-info {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+        }
+
+        .rank-highlight {
+            color: var(--c-cyan);
+            font-weight: 700;
+        }
+
+        .divider {
+            text-align: center;
+            color: #4b4b52;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .divider::before, .divider::after {
+            content: "";
+            height: 1px;
+            background: #4b4b52;
+            width: 40px;
+            margin: 0 10px;
+        }
+
+        .xp-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .xp-bar-bg {
+            flex-grow: 1;
+            height: 12px;
+            background-color: #3f3f46;
+            border-radius: 2px;
+            display: flex;
+            gap: 2px;
+            padding: 1px;
+        }
+
+        .xp-bar-fill {
+            height: 100%;
+            background-color: #e4e4e7;
+            transition: width 0.5s ease;
+        }
+
+        .xp-numbers {
+            font-size: 0.75rem;
+            color: var(--neon-purple);
+            font-weight: 700;
+        }
+
+        .detail-row {
+            font-size: 0.85rem;
+            color: var(--text-main);
+            margin-bottom: 8px;
+        }
+
+        .text-red { color: var(--c-red); font-weight: 700; }
+        .text-purple { color: var(--neon-purple); font-weight: 700; }
+        .text-gold { color: var(--c-gold); font-weight: 700; }
+
+        .new-page-btn {
+            margin-top: 20px;
+            background-color: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: var(--text-muted);
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .new-page-btn:hover {
+            background-color: rgba(255,255,255,0.08);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="title-header">PLAYER</div>
+
+    <div class="player-card">
+        <div class="user-tag">
+            <span>👤</span> Adam
+        </div>
+        
+        <!-- Tu imagen de Avatar generada con la ruta correcta -->
+        <img src="Gemini_Generated_Image_dgih6tdgih6tdgih.jpeg" alt="Player Avatar" class="avatar-img">
+        
+        <div class="icon-stats">📈</div>
+        
+        <div class="level-title" id="p-level">Level -- ⚔️ | Rising from the Ashes</div>
+        <div class="rank-info">Rank: <span class="rank-highlight" id="p-rank">-- Hunter ⭐</span></div>
+        
+        <div class="divider">( )</div>
+        
+        <div class="xp-container">
+            <div class="xp-bar-bg">
+                <div class="xp-bar-fill" id="p-bar" style="width: 0%;"></div>
+            </div>
+            <div class="xp-numbers" id="p-xp-text">--/-- XP</div>
+        </div>
+        
+        <div class="detail-row">
+            You require <span class="text-red" id="p-missing">-- XP</span> to complete this level!
+        </div>
+        <div class="detail-row">
+            XP earned : <span class="text-purple" id="p-total">-- XP</span>
+        </div>
+        <div class="detail-row">
+            Gold earned 💰 : <span class="text-gold" id="p-gold">-- Credits</span>
+        </div>
+
+        <div class="new-page-btn">+ New page</div>
+    </div>
+
+    <script>
+        // ⚠️ PEGA AQUÍ TU URL DE GOOGLE APPS SCRIPT ⚠️
+        const SCRIPT_URL = 'https://script.google.com/macros/s/TU_URL_AQUI/exec';
+
+        async function updatePlayer() {
+            try {
+                const response = await fetch(SCRIPT_URL);
+                const data = await response.json();
+
+                // 1. Matemáticas del Sistema (1000 XP por nivel)
+                const total_xp = data.xp_exercise + data.xp_study + data.xp_reading;
+                const xp_per_level = 1000; 
+                
+                const current_level = Math.floor(total_xp / xp_per_level) + 1;
+                const xp_in_current_level = total_xp % xp_per_level;           
+                const xp_remaining = xp_per_level - xp_in_current_level;       
+                const xp_percent = (xp_in_current_level / xp_per_level) * 100; 
+                
+                // 2. Lógica de Rangos
+                let rank = "E-Rank";
+                let stars = "⭐";
+                if (current_level >= 5) { rank = "D-Rank"; stars = "⭐⭐"; }
+                if (current_level >= 10) { rank = "C-Rank"; stars = "⭐⭐⭐"; }
+                if (current_level >= 15) { rank = "B-Rank"; stars = "🌟"; }
+                if (current_level >= 20) { rank = "A-Rank"; stars = "🌟🌟"; }
+                if (current_level >= 25) { rank = "S-Rank"; stars = "👑"; }
+
+                // 3. Inyección de datos en el HTML idéntico al diseño
+                document.getElementById('p-level').innerText = `Level ${current_level} ⚔️ | Rising from the Ashes`;
+                document.getElementById('p-rank').innerText = `${rank} Hunter ${stars}`;
+                
+                document.getElementById('p-bar').style.width = `${xp_percent}%`;
+                document.getElementById('p-xp-text').innerText = `${xp_in_current_level}/${xp_per_level} XP`;
+                
+                document.getElementById('p-missing').innerText = `${xp_remaining} XP`;
+                document.getElementById('p-total').innerText = `${total_xp} XP`;
+                document.getElementById('p-gold').innerText = `${data.total_gold} Credits`;
+
+            } catch (error) {
+                console.error('Error al conectar con el Sistema:', error);
+                document.getElementById('p-level').innerText = `Error de conexión ⚠️`;
+            }
+        }
+        
+        updatePlayer();
+        setInterval(updatePlayer, 60000);
+    </script>
+</body>
+</html>
