@@ -118,11 +118,11 @@
             <div class="info-box">
                 <h3>📈 CÓMO SE CALCULAN TUS STATS</h3>
                 <p>
-                    <strong>FIT:</strong> Total XP en ejercicio / 100<br>
-                    <strong>FOC:</strong> Total XP en estudio / 100<br>
-                    <strong>INT:</strong> Total XP en lectura / 100<br>
-                    <strong>SOC:</strong> Tu racha consecutiva / 10<br>
-                    <strong>PIN:</strong> Tu oro total / 1000
+                    <strong>FIT:</strong> (Total XP Ejercicio / Meta 5000) * 100<br>
+                    <strong>FOC:</strong> (Total XP Estudio / Meta 5000) * 100<br>
+                    <strong>INT:</strong> (Total XP Lectura / Meta 5000) * 100<br>
+                    <strong>SOC:</strong> (Tu racha / Meta 30 Días) * 100<br>
+                    <strong>PIN:</strong> (Tu oro total / Meta 5000) * 100
                 </p>
             </div>
 
@@ -135,14 +135,14 @@
 
     <script>
         // ============================================
-        // DATOS DE RESPALDO (MANUAL_DATA)
+        // DATOS DE RESPALDO (AHORA INICIAN EN 0)
         // ============================================
         const MANUAL_DATA = {
-            xp_exercise: 750,
-            xp_study: 1200,
-            xp_reading: 450,
-            current_streak: 12,
-            total_gold: 3350
+            xp_exercise: 0,
+            xp_study: 0,
+            xp_reading: 0,
+            current_streak: 0,
+            total_gold: 0
         };
 
         // ============================================
@@ -152,7 +152,6 @@
 
         async function fetchNotionData() {
             try {
-                // Si la URL está vacía por error, usa manual
                 if (!SCRIPT_URL) {
                     return MANUAL_DATA;
                 }
@@ -167,19 +166,28 @@
 
             } catch (error) {
                 console.error('Error fetching data:', error);
-                showError('No se pudieron cargar los datos reales. Usando datos de demostración.');
+                showError('No se pudieron cargar los datos reales. Usando datos iniciales (Cero).');
                 return MANUAL_DATA;
             }
         }
 
-        // Calcular stats desde datos
+        // ============================================
+        // MOTOR DE CONVERSIÓN A PORCENTAJES (0 a 100)
+        // ============================================
         function calculateStats(data) {
+            // Metas máximas para llegar al borde de la telaraña (100%)
+            const META_XP = 5000;
+            const META_RACHA = 30; // 30 días seguidos
+            const META_ORO = 5000; 
+
+            // Math.min asegura que el valor nunca pase de 100
+            // Math.round quita los decimales
             return {
-                FIT: Math.min(Math.round(data.xp_exercise / 10), 100),
-                FOC: Math.min(Math.round(data.xp_study / 10), 100),
-                INT: Math.min(Math.round(data.xp_reading / 10), 100),
-                SOC: Math.min(Math.round(data.current_streak * 8.3), 100),
-                PIN: Math.min(Math.round(data.total_gold / 33.5), 100)
+                FIT: Math.min(Math.round((data.xp_exercise / META_XP) * 100), 100) || 0,
+                FOC: Math.min(Math.round((data.xp_study / META_XP) * 100), 100) || 0,
+                INT: Math.min(Math.round((data.xp_reading / META_XP) * 100), 100) || 0,
+                SOC: Math.min(Math.round((data.current_streak / META_RACHA) * 100), 100) || 0,
+                PIN: Math.min(Math.round((data.total_gold / META_ORO) * 100), 100) || 0
             };
         }
 
@@ -272,7 +280,7 @@
                 card.className = 'stat-card';
                 card.innerHTML = `
                     <div class="stat-name">${key}</div>
-                    <div class="stat-value">${value}</div>
+                    <div class="stat-value">${value}%</div>
                     <div class="stat-description">${descriptions[key]}</div>
                 `;
                 grid.appendChild(card);
@@ -300,7 +308,7 @@
                 loadingDiv.style.display = 'none';
                 contentDiv.style.display = 'block';
 
-                // Actualizar cada 60 segundos (para no agotar los límites de peticiones)
+                // Actualizar cada 60 segundos
                 setInterval(async () => {
                     const newData = await fetchNotionData();
                     const newStats = calculateStats(newData);
