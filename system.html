@@ -3,135 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The System - Solo Leveling</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Orbitron:wght@800&display=swap" rel="stylesheet">
+    <title>System Panel - Solo Leveling</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-main: transparent;
-            --panel-bg: #1e1e1e; /* Fondo estilo Notion Dark Mode */
-            --inner-bg: #252525;
-            --neon-purple: #b366ff;
-            --text-main: #d4d4d4;
+            --bg-main: #0a0e27;
+            --panel-bg: rgba(20, 25, 50, 0.8);
+            --neon-purple: #9d4edd;
+            --text-main: #e0e0e0;
             --text-muted: #8b8b93;
-            --c-blue: #38bdf8;
-            --c-gold: #fbbf24;
+            --c-cyan: #38bdf8;
             --c-red: #ef4444;
+            --c-gold: #fbbf24;
             --c-green: #22c55e;
-            --c-orange: #f97316;
         }
 
         body {
-            background-color: var(--bg-main);
+            background: var(--bg-main); /* Fondo oscuro sincronizado */
             color: var(--text-main);
             font-family: 'Inter', sans-serif;
             margin: 0;
-            padding: 10px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
         .title-header {
-            font-family: 'Orbitron', sans-serif;
             color: var(--neon-purple);
-            font-size: 2.2rem;
+            font-size: 2rem;
+            font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 4px;
             margin-bottom: 20px;
-            text-shadow: 0 0 15px rgba(179, 102, 255, 0.6);
+            text-shadow: 0 0 15px rgba(157, 78, 221, 0.6);
         }
 
         .system-card {
             background-color: var(--panel-bg);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 8px;
+            border-radius: 10px;
             padding: 20px;
             width: 100%;
             max-width: 340px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            position: relative;
+            /* Efecto de borde y resplandor neón idéntico al Player/Radar */
+            border: 2px solid #7C3AED;
+            box-shadow: 0 0 30px rgba(124, 58, 237, 0.3);
         }
 
-        .power-icon {
-            font-size: 1.2rem;
-            color: var(--text-muted);
-            margin-bottom: 15px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            padding-bottom: 10px;
-        }
-
-        .inner-box {
-            background-color: var(--inner-bg);
-            border-radius: 8px;
-            padding: 18px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .box-title {
+        .section-title {
+            font-size: 1rem;
             font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 8px;
-            margin-bottom: 20px;
-            color: #fff;
-            font-size: 0.95rem;
         }
 
-        .section {
-            margin-bottom: 20px;
+        .detail-row {
             font-size: 0.85rem;
-            line-height: 1.6;
+            color: var(--text-main);
+            margin-bottom: 8px;
+            line-height: 1.5;
         }
 
-        /* Colores específicos de la imagen */
-        .t-blue { color: var(--c-blue); font-weight: 700; }
-        .t-red { color: var(--c-red); font-weight: 700; }
-        .t-purple { color: var(--neon-purple); font-weight: 700; }
-        .t-green { color: var(--c-green); font-weight: 700; }
-        .t-gold { color: var(--c-gold); font-weight: 700; }
-        .t-orange { color: var(--c-orange); font-weight: 700; }
-
-        .italic-muted {
-            font-style: italic;
-            color: var(--text-muted);
-            margin-top: 5px;
-        }
+        .text-red { color: var(--c-red); font-weight: 700; }
+        .text-purple { color: var(--neon-purple); font-weight: 700; }
+        .text-gold { color: var(--c-gold); font-weight: 700; }
+        .text-cyan { color: var(--c-cyan); font-weight: 700; }
+        .text-green { color: var(--c-green); font-weight: 700; }
+        .text-muted { color: var(--text-muted); font-style: italic; }
 
         .divider {
             text-align: center;
-            color: #555;
+            color: #4b4b52;
             font-size: 0.8rem;
+            letter-spacing: 2px;
             margin: 15px 0;
             display: flex;
             align-items: center;
             justify-content: center;
         }
-
+        
         .divider::before, .divider::after {
             content: "";
             height: 1px;
-            background: rgba(255, 255, 255, 0.1);
+            background: #4b4b52;
             width: 40px;
             margin: 0 10px;
         }
 
-        .quest-list {
-            list-style: none;
-            padding: 0;
-            margin: 8px 0;
-        }
-
-        .quest-list li {
-            margin-bottom: 4px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #ddd;
-        }
-
-        .footer-text {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-top: 20px;
+        .center-text {
+            text-align: center;
         }
     </style>
 </head>
@@ -140,95 +105,86 @@
     <div class="title-header">SYSTEM</div>
 
     <div class="system-card">
-        <div class="power-icon">⏻</div>
+        <div class="section-title">⚙️ The System</div>
         
-        <div class="inner-box">
-            <div class="box-title">
-                ✪ The System
-            </div>
+        <div class="divider">x</div>
 
-            <!-- STREAK SECTION -->
-            <div class="section">
-                <div class="t-blue">⚡ STREAK STATUS ⚡</div>
-                <div>Streak: <span class="t-blue" id="sys-streak">-- Days</span></div>
-            </div>
+        <div class="detail-row center-text">
+            ⚡ <strong>STREAK STATUS</strong> ⚡<br>
+            Streak: <span class="text-cyan" id="s-streak">-- Days</span>
+        </div>
 
-            <!-- GIFT SECTION -->
-            <div class="section">
-                <div class="t-red">🎁 SYSTEM GIFT 🎁</div>
-                <div class="t-purple">1.2x Boost Activated</div>
-                <div class="t-green">🟢 Logged-In</div>
-            </div>
+        <div class="divider">x</div>
 
-            <!-- WARNING SECTION -->
-            <div class="section">
-                <div class="t-gold">⚠️ SYSTEM WARNING ⚠️</div>
-                <div class="t-orange">⏳ Your Quest is Not Yet Complete!</div>
-                <div class="italic-muted">Your path is still uncertain. The System urges you to continue...</div>
-            </div>
+        <div class="detail-row center-text">
+            🎁 <strong>SYSTEM GIFT</strong> 🎁<br>
+            <span class="text-purple">1.2x Boost Activated</span><br>
+            <span class="text-green">🟢 Logged-In</span>
+        </div>
 
-            <div class="divider">⚔️</div>
+        <div class="divider">x</div>
 
-            <!-- QUESTS SECTION -->
-            <div class="section">
-                <div class="t-purple" id="sys-progress">📊 Progress: [0/0]</div>
-                <div class="t-red">📝 Remaining Quests:</div>
-                <ul class="quest-list" id="sys-quest-list">
-                    <li style="color: #8b8b93; font-style: italic;">Conectando con el Sistema...</li>
-                </ul>
-            </div>
+        <div class="detail-row center-text">
+            ⚠️ <span class="text-gold"><strong>SYSTEM WARNING</strong></span> ⚠️<br>
+            ⏳ Your Quest is Not Yet Complete!<br>
+            <span class="text-muted">Your path is still uncertain. The System urges you to continue...</span>
+        </div>
 
-            <div class="divider">⚔️</div>
+        <div class="divider">x</div>
 
-            <!-- NEXT GATE SECTION (Dinámico) -->
-            <div class="section">
-                <div class="t-purple">⚔️ A new challenge awaits! ⚔️</div>
-                <div>🔓 Next Gate unlocks at: <span class="t-gold" id="sys-next-gate">-- XP.</span></div>
-                <div>📈 XP Needed: <span class="t-red" id="sys-xp-needed">-- XP</span></div>
-            </div>
+        <div class="detail-row">
+            📊 Progress: <span class="text-cyan">[0/0]</span><br>
+            📝 Remaining Quests:<br>
+            <span class="text-muted">Conectando con el Sistema...</span>
+        </div>
 
-            <div class="footer-text">
-                The System awaits your next move...
-            </div>
+        <div class="divider">x</div>
+
+        <div class="detail-row">
+            ⚔️ <strong>A new challenge awaits!</strong> ⚔️<br>
+            🔒 Next Gate unlocks at: <span class="text-gold" id="s-next-gate">-- XP</span><br>
+            📈 XP Needed: <span class="text-red" id="s-xp-needed">-- XP</span>
+        </div>
+
+        <div class="divider">x</div>
+
+        <div class="detail-row text-muted center-text" style="font-size: 0.75rem;">
+            The System awaits your next move...
         </div>
     </div>
 
     <script>
-        // ⚠️ PEGA AQUÍ TU URL DE GOOGLE APPS SCRIPT ⚠️
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzk5g_EXEtj8VQNEtDQ2QO5OIqP1C7w2KMeLbYWkr6eV66_LmpeYjGfh4rle26wQD3K/exec';
+        // Mismo enlace a tu API de Google Apps Script
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwa74MFWG3rdcgYVwu5D1BS_POda-99CUxeB4dxwxnIk_oFdNwZ3MtZRa_wId0936wS/exec';
 
-        async function updateSystemPanel() {
+        async function updateSystem() {
             try {
                 const response = await fetch(SCRIPT_URL);
                 const data = await response.json();
 
-                // 1. Inyectar Racha Activa
-                document.getElementById('sys-streak').innerText = `${data.current_streak} Days`;
-
-                // 2. Matemáticas del Sistema (Cálculo de la próxima Puerta)
+                // 1. Matemáticas para calcular cuánto falta para la siguiente Puerta (Nivel)
                 const total_xp = data.xp_exercise + data.xp_study + data.xp_reading;
                 const xp_per_level = 1000; 
                 
-                // Calcula el nivel actual para saber cuál es el siguiente umbral (Gate)
                 const current_level = Math.floor(total_xp / xp_per_level) + 1;
-                const next_gate_xp = current_level * xp_per_level; 
-                
-                // Calcula la diferencia
+                const next_gate_xp = current_level * xp_per_level;
                 const xp_needed = next_gate_xp - total_xp;
 
-                // 3. Inyectar datos en la interfaz
-                document.getElementById('sys-next-gate').innerText = `${next_gate_xp} XP.`;
-                document.getElementById('sys-xp-needed').innerText = `${xp_needed} XP`;
+                // 2. Inyección de datos
+                // Nota: Asegúrate de que en tu Google Script estés enviando 'current_streak'
+                document.getElementById('s-streak').innerText = `${data.current_streak || 0} Days`;
+                
+                document.getElementById('s-next-gate').innerText = `${next_gate_xp} XP`;
+                document.getElementById('s-xp-needed').innerText = `${xp_needed} XP`;
 
             } catch (error) {
                 console.error('Error al conectar con el Sistema:', error);
-                document.getElementById('sys-streak').innerText = 'Error ⚠️';
+                document.getElementById('s-streak').innerText = `Error ⚠️`;
             }
         }
-
-        // Ejecutar inmediatamente y luego actualizar cada 60 segundos
-        updateSystemPanel();
-        setInterval(updateSystemPanel, 60000);
+        
+        updateSystem();
+        setInterval(updateSystem, 60000);
     </script>
 </body>
 </html>
