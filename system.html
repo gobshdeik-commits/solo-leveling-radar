@@ -130,7 +130,7 @@
 
         .check-box {
             background-color: #7C3AED;
-            color: transparent; /* Ocultamos el check hasta clickear */
+            color: transparent; 
             border-radius: 4px;
             width: 18px;
             height: 18px;
@@ -143,7 +143,7 @@
 
         /* --- NUEVOS ESTILOS: VENTANA EMERGENTE (MODAL) --- */
         .modal-overlay {
-            display: none; /* Oculto por defecto */
+            display: none; 
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.75);
@@ -274,7 +274,6 @@
             📈 XP Needed: <span class="text-red" id="s-xp-needed">-- XP</span>
         </div>
 
-        <!-- BOTÓN DAILY LOG AGREGADO AQUÍ -->
         <div class="daily-log-container">
             <div class="daily-log-btn" id="dailyLogBtn" onclick="openModal()">
                 <div class="check-box" id="daily-check-icon">✔</div>
@@ -284,7 +283,6 @@
 
     </div>
 
-    <!-- EL MODAL (VENTANA EMERGENTE) -->
     <div class="modal-overlay" id="syncModal">
         <div class="modal-content">
             <div class="modal-icon">✔</div>
@@ -301,7 +299,6 @@
     <script>
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwa74MFWG3rdcgYVwu5D1BS_POda-99CUxeB4dxwxnIk_oFdNwZ3MtZRa_wId0936wS/exec';
 
-        // Lógica de datos del Sistema
         async function updateSystem() {
             try {
                 const response = await fetch(SCRIPT_URL);
@@ -327,7 +324,6 @@
         updateSystem();
         setInterval(updateSystem, 60000);
 
-        // --- LÓGICA DEL MODAL DE SINCRONIZACIÓN ---
         function openModal() {
             document.getElementById('syncModal').classList.add('active');
         }
@@ -336,25 +332,34 @@
             document.getElementById('syncModal').classList.remove('active');
         }
 
-        function confirmSync() {
-            // Animación y confirmación visual al hacer clic en "Yes"
+        async function confirmSync() {
             const icon = document.getElementById('daily-check-icon');
             const btn = document.getElementById('dailyLogBtn');
             const text = document.getElementById('daily-log-text');
 
-            icon.style.color = 'white'; // Hace visible el check
-            icon.style.backgroundColor = '#22c55e'; // Cambia el cuadrado a verde
+            // 1. Estado de carga visual mientras contacta al Sistema
+            text.innerText = 'Synchronizing...';
+            icon.innerText = '⏳';
+            icon.style.color = 'white';
+
+            try {
+                // 2. Envía la señal silenciosa a tu Google Script para sumar +1 a la racha
+                await fetch(SCRIPT_URL + '?action=checkin', { mode: 'no-cors' });
+            } catch (error) {
+                console.error('Error enviando la señal de check-in al Sistema:', error);
+            }
+
+            // 3. Confirmación visual de éxito (Pasa a verde)
+            icon.innerText = '✔';
+            icon.style.backgroundColor = '#22c55e';
             
             btn.style.borderColor = '#22c55e';
             btn.style.backgroundColor = 'rgba(34, 197, 94, 0.1)';
             text.style.color = '#22c55e';
             text.innerText = 'Synchronized';
 
-            // Cerramos la ventana
+            // Cerramos la ventana modal
             closeModal();
-            
-            // Aquí en un futuro puedes hacer que este botón envíe una señal a tu API de Google Script
-            // para que sume +1 a la racha de forma automática en tu base de datos.
         }
     </script>
 </body>
