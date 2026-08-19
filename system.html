@@ -16,10 +16,11 @@
             --c-red: #ef4444;
             --c-gold: #fbbf24;
             --c-green: #22c55e;
+            --c-blue: #3b82f6;
         }
 
         body {
-            background: var(--bg-main); /* Fondo oscuro sincronizado */
+            background: var(--bg-main);
             color: var(--text-main);
             font-family: 'Inter', sans-serif;
             margin: 0;
@@ -46,7 +47,6 @@
             width: 100%;
             max-width: 340px;
             position: relative;
-            /* Efecto de borde y resplandor neón idéntico al Player/Radar */
             border: 2px solid #7C3AED;
             box-shadow: 0 0 30px rgba(124, 58, 237, 0.3);
         }
@@ -98,6 +98,134 @@
         .center-text {
             text-align: center;
         }
+
+        /* --- NUEVOS ESTILOS: BOTÓN DAILY LOG --- */
+        .daily-log-container {
+            margin-top: 25px;
+            display: flex;
+            justify-content: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 15px;
+        }
+
+        .daily-log-btn {
+            background-color: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+            padding: 8px 24px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .daily-log-btn:hover {
+            background-color: rgba(124, 58, 237, 0.15);
+            border-color: var(--neon-purple);
+        }
+
+        .check-box {
+            background-color: #7C3AED;
+            color: transparent; /* Ocultamos el check hasta clickear */
+            border-radius: 4px;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.75rem;
+            transition: color 0.2s;
+        }
+
+        /* --- NUEVOS ESTILOS: VENTANA EMERGENTE (MODAL) --- */
+        .modal-overlay {
+            display: none; /* Oculto por defecto */
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(3px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: #1c1c24;
+            border-radius: 12px;
+            padding: 25px 20px;
+            width: 85%;
+            max-width: 300px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-icon {
+            background: #7C3AED;
+            color: white;
+            width: 45px; height: 45px;
+            margin: 0 auto 15px;
+            border-radius: 8px;
+            display: flex; justify-content: center; align-items: center;
+            font-size: 1.5rem;
+        }
+
+        .modal-text {
+            font-size: 0.9rem;
+            color: #e0e0e0;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .modal-subtitle {
+            font-weight: 700;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .btn-yes {
+            background: var(--c-blue);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-bottom: 12px;
+            transition: background 0.2s;
+        }
+
+        .btn-yes:hover { background: #2563eb; }
+
+        .btn-no {
+            background: transparent;
+            color: var(--c-red);
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .btn-no:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -146,23 +274,39 @@
             📈 XP Needed: <span class="text-red" id="s-xp-needed">-- XP</span>
         </div>
 
-        <div class="divider">x</div>
+        <!-- BOTÓN DAILY LOG AGREGADO AQUÍ -->
+        <div class="daily-log-container">
+            <div class="daily-log-btn" id="dailyLogBtn" onclick="openModal()">
+                <div class="check-box" id="daily-check-icon">✔</div>
+                <span id="daily-log-text">Daily Log</span>
+            </div>
+        </div>
 
-        <div class="detail-row text-muted center-text" style="font-size: 0.75rem;">
-            The System awaits your next move...
+    </div>
+
+    <!-- EL MODAL (VENTANA EMERGENTE) -->
+    <div class="modal-overlay" id="syncModal">
+        <div class="modal-content">
+            <div class="modal-icon">✔</div>
+            <div class="modal-text">
+                The System awaits your presence.<br>
+                If you fail to check in today, penalties will be applied.
+            </div>
+            <div class="modal-subtitle">Are you ready to synchronize? ⚡</div>
+            <button class="btn-yes" onclick="confirmSync()">Yes ✅</button>
+            <button class="btn-no" onclick="closeModal()">No ❌</button>
         </div>
     </div>
 
     <script>
-        // Mismo enlace a tu API de Google Apps Script
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwa74MFWG3rdcgYVwu5D1BS_POda-99CUxeB4dxwxnIk_oFdNwZ3MtZRa_wId0936wS/exec';
 
+        // Lógica de datos del Sistema
         async function updateSystem() {
             try {
                 const response = await fetch(SCRIPT_URL);
                 const data = await response.json();
 
-                // 1. Matemáticas para calcular cuánto falta para la siguiente Puerta (Nivel)
                 const total_xp = data.xp_exercise + data.xp_study + data.xp_reading;
                 const xp_per_level = 1000; 
                 
@@ -170,10 +314,7 @@
                 const next_gate_xp = current_level * xp_per_level;
                 const xp_needed = next_gate_xp - total_xp;
 
-                // 2. Inyección de datos
-                // Nota: Asegúrate de que en tu Google Script estés enviando 'current_streak'
                 document.getElementById('s-streak').innerText = `${data.current_streak || 0} Days`;
-                
                 document.getElementById('s-next-gate').innerText = `${next_gate_xp} XP`;
                 document.getElementById('s-xp-needed').innerText = `${xp_needed} XP`;
 
@@ -185,6 +326,36 @@
         
         updateSystem();
         setInterval(updateSystem, 60000);
+
+        // --- LÓGICA DEL MODAL DE SINCRONIZACIÓN ---
+        function openModal() {
+            document.getElementById('syncModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('syncModal').classList.remove('active');
+        }
+
+        function confirmSync() {
+            // Animación y confirmación visual al hacer clic en "Yes"
+            const icon = document.getElementById('daily-check-icon');
+            const btn = document.getElementById('dailyLogBtn');
+            const text = document.getElementById('daily-log-text');
+
+            icon.style.color = 'white'; // Hace visible el check
+            icon.style.backgroundColor = '#22c55e'; // Cambia el cuadrado a verde
+            
+            btn.style.borderColor = '#22c55e';
+            btn.style.backgroundColor = 'rgba(34, 197, 94, 0.1)';
+            text.style.color = '#22c55e';
+            text.innerText = 'Synchronized';
+
+            // Cerramos la ventana
+            closeModal();
+            
+            // Aquí en un futuro puedes hacer que este botón envíe una señal a tu API de Google Script
+            // para que sume +1 a la racha de forma automática en tu base de datos.
+        }
     </script>
 </body>
 </html>
