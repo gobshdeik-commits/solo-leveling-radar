@@ -18,7 +18,7 @@
         }
 
         body {
-            background: var(--bg-main); /* Fondo oscuro del Sistema */
+            background: var(--bg-main);
             color: var(--text-main);
             font-family: 'Inter', sans-serif;
             margin: 0;
@@ -45,7 +45,6 @@
             width: 100%;
             max-width: 340px;
             position: relative;
-            /* Efecto de borde y resplandor neón unificado con el Radar */
             border: 2px solid #7C3AED;
             box-shadow: 0 0 30px rgba(124, 58, 237, 0.3);
         }
@@ -181,7 +180,6 @@
             <span>👤</span> Diego
         </div>
         
-        <!-- Tu imagen de Avatar generada con la ruta correcta -->
         <img src="Gemini_Generated_Image_dgih6tdgih6tdgih.jpeg" alt="Player Avatar" class="avatar-img">
         
         <div class="icon-stats">📈</div>
@@ -208,7 +206,10 @@
             Gold earned 💰 : <span class="text-gold" id="p-gold">-- Credits</span>
         </div>
 
-        <div class="new-page-btn">+ New page</div>
+        <!-- BOTÓN ACTUALIZADO CON TU ENLACE DE NOTION -->
+        <a href="https://app.notion.com/p/Quest-3bf5f17207c080f5b622f5065e4ec304?source=copy_link" target="_blank" style="text-decoration: none;">
+            <div class="new-page-btn">+ New page</div>
+        </a>
     </div>
 
     <script>
@@ -219,7 +220,6 @@
                 const response = await fetch(SCRIPT_URL);
                 const data = await response.json();
 
-                // 1. Matemáticas del Sistema (1000 XP por nivel)
                 const total_xp = data.xp_exercise + data.xp_study + data.xp_reading;
                 const xp_per_level = 1000; 
                 
@@ -228,7 +228,6 @@
                 const xp_remaining = xp_per_level - xp_in_current_level;       
                 const xp_percent = (xp_in_current_level / xp_per_level) * 100; 
                 
-                // 2. Lógica de Rangos
                 let rank = "E-Rank";
                 let stars = "⭐";
                 if (current_level >= 5) { rank = "D-Rank"; stars = "⭐⭐"; }
@@ -237,7 +236,6 @@
                 if (current_level >= 20) { rank = "A-Rank"; stars = "🌟🌟"; }
                 if (current_level >= 25) { rank = "S-Rank"; stars = "👑"; }
 
-                // 3. Inyección de datos en el HTML
                 document.getElementById('p-level').innerText = `Level ${current_level} ⚔️ | Rising from the Ashes`;
                 document.getElementById('p-rank').innerText = `${rank} Hunter ${stars}`;
                 
