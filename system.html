@@ -99,7 +99,6 @@
             text-align: center;
         }
 
-        /* --- NUEVOS ESTILOS: BOTÓN DAILY LOG --- */
         .daily-log-container {
             margin-top: 25px;
             display: flex;
@@ -141,7 +140,6 @@
             transition: color 0.2s;
         }
 
-        /* --- NUEVOS ESTILOS: VENTANA EMERGENTE (MODAL) --- */
         .modal-overlay {
             display: none; 
             position: fixed;
@@ -261,9 +259,10 @@
         <div class="divider">x</div>
 
         <div class="detail-row">
-            📊 Progress: <span class="text-cyan">[0/0]</span><br>
+            <!-- AÑADIDOS LOS IDs "s-progress" y "s-quests" AQUÍ -->
+            📊 Progress: <span class="text-cyan" id="s-progress">[0/0]</span><br>
             📝 Remaining Quests:<br>
-            <span class="text-muted">Conectando con el Sistema...</span>
+            <span class="text-muted" id="s-quests">Conectando con el Sistema...</span>
         </div>
 
         <div class="divider">x</div>
@@ -297,7 +296,7 @@
     </div>
 
     <script>
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbza-0__d8a6WcwHafCSq4zasuGRYMotcXWl4Mmtqyc6nvTzm8fPcrbn0dX-ie20K2D4/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwa74MFWG3rdcgYVwu5D1BS_POda-99CUxeB4dxwxnIk_oFdNwZ3MtZRa_wId0936wS/exec';
 
         async function updateSystem() {
             try {
@@ -315,9 +314,27 @@
                 document.getElementById('s-next-gate').innerText = `${next_gate_xp} XP`;
                 document.getElementById('s-xp-needed').innerText = `${xp_needed} XP`;
 
+                // --- NUEVA LÓGICA: Inyectar las misiones y el progreso ---
+                document.getElementById('s-progress').innerText = `[${data.completed_quests || 0}/${data.total_quests || 0}]`;
+                
+                const questsElement = document.getElementById('s-quests');
+                
+                if (data.pending_quests && data.pending_quests.length > 0) {
+                    // Si hay misiones, las lista con un punto viñeta
+                    questsElement.innerHTML = data.pending_quests.map(q => `• ${q}`).join('<br>');
+                    questsElement.style.color = '#e0e0e0'; // Quita el color atenuado
+                } else if (data.total_quests > 0 && data.completed_quests === data.total_quests) {
+                    // Si completaste todas
+                    questsElement.innerHTML = '¡Todas las misiones completadas! 🏆';
+                    questsElement.style.color = '#22c55e'; // Verde
+                } else {
+                    questsElement.innerHTML = 'No se detectaron misiones.';
+                }
+
             } catch (error) {
                 console.error('Error al conectar con el Sistema:', error);
                 document.getElementById('s-streak').innerText = `Error ⚠️`;
+                document.getElementById('s-quests').innerText = `Error de conexión.`;
             }
         }
         
@@ -337,19 +354,16 @@
             const btn = document.getElementById('dailyLogBtn');
             const text = document.getElementById('daily-log-text');
 
-            // 1. Estado de carga visual mientras contacta al Sistema
             text.innerText = 'Synchronizing...';
             icon.innerText = '⏳';
             icon.style.color = 'white';
 
             try {
-                // 2. Envía la señal silenciosa a tu Google Script para sumar +1 a la racha
                 await fetch(SCRIPT_URL + '?action=checkin', { mode: 'no-cors' });
             } catch (error) {
                 console.error('Error enviando la señal de check-in al Sistema:', error);
             }
 
-            // 3. Confirmación visual de éxito (Pasa a verde)
             icon.innerText = '✔';
             icon.style.backgroundColor = '#22c55e';
             
@@ -358,7 +372,6 @@
             text.style.color = '#22c55e';
             text.innerText = 'Synchronized';
 
-            // Cerramos la ventana modal
             closeModal();
         }
     </script>
